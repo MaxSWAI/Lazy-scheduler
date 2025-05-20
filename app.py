@@ -18,6 +18,8 @@ def index():
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    print("generate 함수 호출됨") # 함수 호출 확인용 로그 출력
+    
     # 사용자가 입력한 설문 데이터 수집
     q1 = request.form.get('q1')
     q2 = request.form.get('q2')
