@@ -1,62 +1,40 @@
-from flask import Flask, render_template, request, redirect
-import json
+from flask import Flask, render_template, request
+import openai
 import os
 
 app = Flask(__name__)
-DATA_FILE = "tasks.json"
 
-def load_tasks():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return []
+# OPENAI API 키 설정
+openai.api_key = os.environ.get("OPENAI_API_KEY")  # Render에서 환경변수로 설정
 
-def save_tasks(tasks):
-    with open(DATA_FILE, "w") as f:
-        json.dump(tasks, f)
-
-def calculate_lazy_score(tasks):
-    """
-    귀찮음 점수 = 미룬 횟수(postponed) 기준
-    3회 이상이면 귀찮음 상태로 판단
-    """
-    total_postpones = sum(task.get("postponed", 0) for task in tasks)
-    return total_postpones
-
-@app.route("/")
+@app.route('/')
 def index():
-    tasks = load_tasks()
-    lazy_score = calculate_lazy_score(tasks)
-    is_lazy = lazy_score >= 3
-    return render_template("index.html", tasks=tasks, lazy=is_lazy, lazy_score=lazy_score)
+    return render_template('index.html')
 
-@app.route("/add", methods=["POST"])
-def add():
-    title = request.form["title"]
-    time = request.form["time"]
-    tasks = load_tasks()
-    tasks.append({"title": title, "time": time, "done": False, "postponed": 0})
-    save_tasks(tasks)
-    return redirect("/")
+@app.route('/generate', methods=['POST'])
+def generate():
+    q1 = request.form.get('q1')
+    q2 = request.form.get('q2')
+    q3 = request.form.get('q3')
 
-@app.route("/done/<int:index>")
-def done(index):
-    tasks = load_tasks()
-    tasks[index]["done"] = True
-    save_tasks(tasks)
-    return redirect("/")
+    prompt = f"""
+    다음은 사용자의 일정 계획을 돕기 위한 질문과 답변이다.
 
-@app.route("/postpone/<int:index>")
-def postpone(index):
-    tasks = load_tasks()
-    tasks[index]["postponed"] = tasks[index].get("postponed", 0) + 1
-    save_tasks(tasks)
-    return redirect("/")
+    1. 최근에 하고 싶었던 일은? -> {q1}
+    2. 3개월 이내 달성하고 싶은 목표는? -> {q2}
+    3. 계속 미루고 있었던 일은? -> {q3}
 
-@app.route("/reset")
-def reset():
-    save_tasks([])
-    return redirect("/")
+    이 정보를 바탕으로 사용자가 이번 주에 시작할 수 있는 계획을 한글로 구체적으로 3가지 제안해줘.
+    각 제안은 '제목: 내용' 형식으로 작성해줘.
+    """
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        ai_plan = response['choices'][0]['message']['content']
+    except Exception as e:
+        ai_plan = f"AI 추천 중 오류가 발생했습니다: {str(e)}"
+
+    return render_template('plan.html', plan=ai_plan)
