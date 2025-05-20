@@ -1,31 +1,27 @@
 from flask import Flask, render_template, request
-import openai
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
-# 로컬 실행을 위한 .env 파일 로드 (서버에서는 무시됨)
+# 환경변수 불러오기 (.env 파일)
 load_dotenv()
 
 # Flask 앱 초기화
 app = Flask(__name__)
 
-# OpenAI API 키 설정 (Render에서는 환경변수 사용)
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# OpenAI 클라이언트 초기화 (새로운 방식)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route('/')
 def index():
-    return render_template('index.html')  # 설문 폼 페이지
+    return render_template('index.html')
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    print("generate 함수 호출됨") # 함수 호출 확인용 로그 출력
-    
-    # 사용자가 입력한 설문 데이터 수집
     q1 = request.form.get('q1')
     q2 = request.form.get('q2')
     q3 = request.form.get('q3')
 
-    # GPT에게 전달할 프롬프트 생성
     prompt = f"""
 다음은 사용자의 일정 계획을 돕기 위한 질문과 답변이다.
 
@@ -38,14 +34,14 @@ def generate():
 """
 
     try:
-        response = openai.Chat.completion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "당신은 사용자의 목표 달성을 돕는 똑똑한 일정 플래너입니다."},
                 {"role": "user", "content": prompt}
             ]
         )
-        ai_plan = response.choices[0].message.content'
+        ai_plan = response.choices[0].message.content
     except Exception as e:
         ai_plan = f"AI 추천 중 오류가 발생했습니다: {str(e)}"
 
