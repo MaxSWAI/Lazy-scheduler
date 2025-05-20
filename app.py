@@ -50,3 +50,7 @@ def generate():
         ai_plan = f"AI 추천 중 오류가 발생했습니다: {str(e)}"
 
     return render_template('plan.html', plan=ai_plan)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))  # Render가 PORT 환경변수를 줌, 없으면 5000포트로 실행
+    app.run(host='0.0.0.0', port=port, debug=True)
