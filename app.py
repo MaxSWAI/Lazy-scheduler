@@ -39,7 +39,7 @@ def generate():
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "당신은 사용자의 목표 달성을 돕는 똑똑한 일정 플래너입니다."},
                 {"role": "user", "content": prompt}
