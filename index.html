@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>귀찮이 스케줄러</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; background: #f8f8f8; }
+    h1 { color: #333; }
+    .lazy { background-color: #fff3cd; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ffeeba; }
+    li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>📅 귀찮이 스케줄러</h1>
+
+  {% if lazy %}
+  <div class="lazy">
+    😵 귀찮음 감지됨! (귀찮음 점수: {{ lazy_score }})<br />
+    너무 많은 일을 미루고 있어요. 조금만 해볼까요?
+  </div>
+  {% endif %}
+
+  <form action="/add" method="post">
+    <input type="text" name="title" placeholder="할 일" required />
+    <input type="datetime-local" name="time" required />
+    <button type="submit">추가</button>
+  </form>
+
+  <ul>
+    {% for task in tasks %}
+      <li>
+        {% if task.done %}
+          ✅ <s>{{ task.title }} ({{ task.time }})</s>
+        {% else %}
+          🔸 {{ task.title }} ({{ task.time }}) - 미룸: {{ task.postponed }}회
+          <a href="/done/{{ loop.index0 }}">[완료]</a>
+          <a href="/postpone/{{ loop.index0 }}">[미루기]</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="/reset">🗑️ 모두 삭제</a>
+</body>
+</html>
