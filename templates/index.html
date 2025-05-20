@@ -2,44 +2,21 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>귀찮이 스케줄러</title>
-  <style>
-    body { font-family: sans-serif; margin: 2rem; background: #f8f8f8; }
-    h1 { color: #333; }
-    .lazy { background-color: #fff3cd; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ffeeba; }
-    li { margin-bottom: 0.5rem; }
-  </style>
+  <title>Lazy Scheduler - 맞춤 일정 시작하기</title>
 </head>
 <body>
-  <h1>📅 귀찮이 스케줄러</h1>
+  <h1>나에게 맞는 계획을 추천받아보세요</h1>
+  <form action="/generate" method="post">
+    <p>1. 최근에 하고싶었던 일은 뭐야?</p>
+    <input type="text" name="q1" required><br><br>
 
-  {% if lazy %}
-  <div class="lazy">
-    😵 귀찮음 감지됨! (귀찮음 점수: {{ lazy_score }})<br>
-    너무 많은 일을 미루고 있어요. 조금만 해볼까요?
-  </div>
-  {% endif %}
+    <p>2. 3개월 이내 달성하고 싶은 목표는 뭐야?</p>
+    <input type="text" name="q2" required><br><br>
 
-  <form action="/add" method="post">
-    <input type="text" name="title" placeholder="할 일" required>
-    <input type="datetime-local" name="time" required>
-    <button type="submit">추가</button>
+    <p>3. 계속 미루고 있었던 일은 뭐야?</p>
+    <input type="text" name="q3" required><br><br>
+
+    <button type="submit">추천 받기</button>
   </form>
-
-  <ul>
-    {% for task in tasks %}
-      <li>
-        {% if task.done %}
-          ✅ <s>{{ task.title }} ({{ task.time }})</s>
-        {% else %}
-          🔸 {{ task.title }} ({{ task.time }}) - 미룸: {{ task.postponed }}회
-          <a href="/done/{{ loop.index0 }}">[완료]</a>
-          <a href="/postpone/{{ loop.index0 }}">[미루기]</a>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-
-  <a href="/reset">🗑️ 모두 삭제</a>
 </body>
 </html>
