@@ -5,16 +5,16 @@
   <title>AI 일정 추천 설문</title>
 </head>
 <body>
-  <h1>AI 맞춤 일정 추천</h1>
+  <h1>당신에게 맞는 AI 일정 추천을 도와드릴게요!</h1>
   <form action="/generate" method="post">
-    <label>1. 최근에 하고 싶었던 일은?</label><br>
-    <input type="text" name="q1" required><br><br>
+    <label for="q1">1. 최근에 하고 싶었던 일은?</label><br>
+    <textarea id="q1" name="q1" rows="2" cols="50" required></textarea><br><br>
 
-    <label>2. 3개월 이내 달성하고 싶은 목표는?</label><br>
-    <input type="text" name="q2" required><br><br>
+    <label for="q2">2. 3개월 이내 달성하고 싶은 목표는?</label><br>
+    <textarea id="q2" name="q2" rows="2" cols="50" required></textarea><br><br>
 
-    <label>3. 계속 미루고 있었던 일은?</label><br>
-    <input type="text" name="q3" required><br><br>
+    <label for="q3">3. 계속 미루고 있었던 일은?</label><br>
+    <textarea id="q3" name="q3" rows="2" cols="50" required></textarea><br><br>
 
     <button type="submit">AI 추천 받기</button>
   </form>
