@@ -3,13 +3,13 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 환경변수 불러오기 (.env 파일)
+# .env 파일에서 환경 변수 불러오기
 load_dotenv()
 
 # Flask 앱 초기화
 app = Flask(__name__)
 
-# OpenAI 클라이언트 초기화 (새로운 방식)
+# OpenAI 클라이언트 설정
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route('/')
@@ -34,6 +34,7 @@ def generate():
 """
 
     try:
+        # 새로운 방식 사용
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
