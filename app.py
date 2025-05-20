@@ -1,27 +1,29 @@
 from flask import Flask, render_template, request
-import os
 from dotenv import load_dotenv
+import os
 from openai import OpenAI
 
-# .env 파일에서 환경 변수 불러오기
+# .env 파일 로드
 load_dotenv()
 
 # Flask 앱 초기화
 app = Flask(__name__)
 
-# OpenAI 클라이언트 설정
+# OpenAI 클라이언트 초기화
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html')  # 설문 입력 폼 페이지
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    # 설문 응답 수집
     q1 = request.form.get('q1')
     q2 = request.form.get('q2')
     q3 = request.form.get('q3')
 
+    # 프롬프트 생성
     prompt = f"""
 다음은 사용자의 일정 계획을 돕기 위한 질문과 답변이다.
 
@@ -34,7 +36,6 @@ def generate():
 """
 
     try:
-        # 새로운 방식 사용
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
