@@ -38,14 +38,14 @@ def generate():
 """
 
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.Chat.completion.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "당신은 사용자의 목표 달성을 돕는 똑똑한 일정 플래너입니다."},
                 {"role": "user", "content": prompt}
             ]
         )
-        ai_plan = response['choices'][0]['message']['content']
+        ai_plan = response.choices[0].message.content'
     except Exception as e:
         ai_plan = f"AI 추천 중 오류가 발생했습니다: {str(e)}"
 
