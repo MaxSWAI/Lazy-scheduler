@@ -38,3 +38,13 @@ def generate():
         ai_plan = f"AI 추천 중 오류가 발생했습니다: {str(e)}"
 
     return render_template('plan.html', plan=ai_plan)
+
+import openai
+import os
+from dotenv import load_dotenv
+
+# GitHub Actions에는 .env가 없어도 되지만 로컬에서도 테스트하려면 포함하세요
+load_dotenv()
+
+# 환경변수에서 API 키 가져오기
+openai.api_key = os.getenv("OPENAI_API_KEY")
