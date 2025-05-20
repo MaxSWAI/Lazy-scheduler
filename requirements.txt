@@ -1,4 +1,4 @@
 Flask==3.1.1
-openai==1.14.2  # 또는 1.79.0도 가능
+openai==1.14.2
 python-dotenv==1.0.0
-gunicorn==
+gunicorn
