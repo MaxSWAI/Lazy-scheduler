@@ -44,7 +44,7 @@ def generate():
     try:
         # Gemini 모델 초기화
         # 'gemini-pro', 'gemini-1.5-pro-latest' 등 다양한 Gemini 모델을 선택할 수 있습니다.
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
         # Gemini를 사용하여 콘텐츠 생성
         # 'gemini-pro'의 경우 직접 텍스트 생성이 일반적입니다.
