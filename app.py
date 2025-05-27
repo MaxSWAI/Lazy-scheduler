@@ -66,7 +66,7 @@ def generate():
 
     ai_plan = ""
     try:
-        model = genai.GenerativeModel('gemini-pro') # 또는 'gemini-1.5-flash-latest' 등
+        model = genai.GenerativeModel('gemini-1.5-flash-latest') # 또는 'gemini-1.5-flash-latest' 등
         response = model.generate_content(prompt)
         ai_plan = response.text
     except Exception as e:
